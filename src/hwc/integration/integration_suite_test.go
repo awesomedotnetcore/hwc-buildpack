@@ -94,6 +94,12 @@ func ApiHasTask() bool {
 	return apiHasTask(apiVersion)
 }
 
+func ApiHasMultiBuildpack() bool {
+	supported, err := cutlass.ApiGreaterThan("2.90.0")
+	Expect(err).NotTo(HaveOccurred())
+	return supported
+}
+
 func ApiHasStackAssociation() bool {
 	supported, err := cutlass.ApiGreaterThan("2.113.0")
 	Expect(err).NotTo(HaveOccurred())

@@ -11,6 +11,7 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("CF HWC Buildpack", func() {
@@ -68,6 +69,34 @@ var _ = Describe("CF HWC Buildpack", func() {
 					Expect(app.Stdout.String()).ToNot(ContainSubstring("Copy ["))
 				}
 				Expect(app.GetBody("/rewrite")).To(ContainSubstring("hello i am nora"))
+			})
+
+			FContext("with an extension buildpack", func() {
+				BeforeEach(func() {
+					if !ApiHasMultiBuildpack() {
+						Skip("API does not have multi buildpack support")
+					}
+					app.Buildpacks = []string{"some_extension_buildpack", "hwc_buildpack"}
+				})
+
+				It("deploys successfully", func() {
+					PushAppAndConfirm(app)
+					stdout := gbytes.BufferReader(app.Stdout)
+					if cutlass.Cached {
+						Expect(app.Stdout.String()).ToNot(ContainSubstring("Download ["))
+
+						Expect(stdout).To(gbytes.Say("Copy \\["))
+						Expect(stdout).To(gbytes.Say("Copy \\["))
+					} else {
+						Expect(app.Stdout.String()).ToNot(ContainSubstring("Copy ["))
+
+						Expect(stdout).To(gbytes.Say("Download \\["))
+						Expect(stdout).To(gbytes.Say("Download \\["))
+					}
+					Expect(app.GetBody("/")).To(ContainSubstring("hello i am nora"))
+					// TODO: curl nora to invoke binary provided by the extension buildpack
+					// TODO: is there a powershell command that will search for a DLL on the path?
+				})
 			})
 		})
 
