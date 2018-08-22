@@ -74,9 +74,10 @@ func TestIntegration(t *testing.T) {
 }
 
 func PushAppAndConfirm(app *cutlass.App) {
-	Expect(app.Push()).To(Succeed())
+	err := app.Push()
+	Expect(err).ToNot(HaveOccurred())
 	Eventually(func() ([]string, error) { return app.InstanceStates() }, 20*time.Second).Should(Equal([]string{"RUNNING"}))
-	Expect(app.ConfirmBuildpack(buildpackVersion)).To(Succeed())
+	ExpectWithOffset(1, app.ConfirmBuildpack(buildpackVersion)).To(Succeed())
 }
 
 func Restart(app *cutlass.App) {
