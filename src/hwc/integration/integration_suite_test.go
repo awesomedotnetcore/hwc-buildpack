@@ -4,14 +4,17 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/blang/semver"
 	"github.com/cloudfoundry/libbuildpack/cutlass"
+	"github.com/cloudfoundry/libbuildpack/packager"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -22,6 +25,8 @@ import (
 var bpDir string
 var buildpackVersion string
 var packagedBuildpack cutlass.VersionedBuildpackPackage
+var extensionBuildpackDir = "../../../fixtures/mysql-buildpack"
+var extensionBuildpackName = "some_extension"
 
 func init() {
 	flag.StringVar(&buildpackVersion, "version", "", "version to use (builds if empty)")
@@ -34,7 +39,10 @@ func init() {
 var _ = SynchronizedBeforeSuite(func() []byte {
 	// Run once
 	if buildpackVersion == "" {
-		packagedBuildpack, err := cutlass.PackageUniquelyVersionedBuildpack(os.Getenv("CF_STACK"), ApiHasStackAssociation())
+		err := PackageUniquelyVersionedExtensionBuildpack(extensionBuildpackName, extensionBuildpackDir, "", ApiHasStackAssociation())
+		Expect(err).NotTo(HaveOccurred())
+
+		packagedBuildpack, err := cutlass.PackageUniquelyVersionedBuildpack("", ApiHasStackAssociation())
 		Expect(err).NotTo(HaveOccurred())
 
 		data, err := json.Marshal(packagedBuildpack)
@@ -180,4 +188,30 @@ func AssertNoInternetTraffic(fixtureName string) {
 		Expect(built).To(BeTrue())
 		Expect(traffic).To(BeEmpty())
 	})
+}
+
+func PackageUniquelyVersionedExtensionBuildpack(name, fixtureDir, stack string, stackAssociationSupported bool) error {
+	data, err := ioutil.ReadFile(filepath.Join(fixtureDir, "VERSION"))
+	if err != nil {
+		return fmt.Errorf("Failed to read VERSION file: %v", err)
+	}
+	buildpackVersion := strings.TrimSpace(string(data))
+	buildpackVersion = fmt.Sprintf("%s.%s", buildpackVersion, time.Now().Format("20060102150405"))
+
+	cached := cutlass.Cached
+	file, err := packager.Package(fixtureDir, packager.CacheDir, buildpackVersion, stack, cached)
+	if err != nil {
+		return fmt.Errorf("Failed to package buildpack: %v", err)
+	}
+
+	if !stackAssociationSupported {
+		stack = ""
+	}
+
+	err = cutlass.CreateOrUpdateBuildpack(name, file, stack)
+	if err != nil {
+		return fmt.Errorf("Failed to create or update buildpack: %v", err)
+	}
+
+	return nil
 }

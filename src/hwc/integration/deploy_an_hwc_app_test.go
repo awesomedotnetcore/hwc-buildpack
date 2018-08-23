@@ -11,7 +11,6 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("CF HWC Buildpack", func() {
@@ -81,17 +80,13 @@ var _ = Describe("CF HWC Buildpack", func() {
 
 				It("deploys successfully", func() {
 					PushAppAndConfirm(app)
-					stdout := gbytes.BufferReader(app.Stdout)
 					if cutlass.Cached {
 						Expect(app.Stdout.String()).ToNot(ContainSubstring("Download ["))
-
-						Expect(stdout).To(gbytes.Say("Copy \\["))
-						Expect(stdout).To(gbytes.Say("Copy \\["))
+						Expect(app.Stdout.String()).To(MatchRegexp(`(?s)(?:Copy \[.*){2}`))
 					} else {
 						Expect(app.Stdout.String()).ToNot(ContainSubstring("Copy ["))
-
-						Expect(stdout).To(gbytes.Say("Download \\["))
-						Expect(stdout).To(gbytes.Say("Download \\["))
+						/* Expect "Download [" twice */
+						Expect(app.Stdout.String()).To(MatchRegexp(`(?s)(?:Download \[.*){2}`))
 					}
 					Expect(app.GetBody("/")).To(ContainSubstring("hello i am nora"))
 					// TODO: curl nora to invoke binary provided by the extension buildpack
