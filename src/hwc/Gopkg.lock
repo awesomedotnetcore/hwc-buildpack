@@ -19,7 +19,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:09dd797b224ae7c62ab2360eeacaecd7509bf8bb273fef222ae9cb809a5e55ca"
+  digest = "1:75dbbbb84b7ce0cbe2343a0b158f410fbd37b9903ad738e351751205dd632700"
   name = "github.com/cloudfoundry/libbuildpack"
   packages = [
     ".",
@@ -27,7 +27,7 @@
     "packager",
   ]
   pruneopts = ""
-  revision = "ece57a8c1470e805391202330686fdf5a11658ec"
+  revision = "0f28470a5391e0d3a1a3433e6bff692f849d6bee"
 
 [[projects]]
   digest = "1:7ce300e943482aff885b3318c1c6a609827f43e3ba26a073380d5ba6143a0c48"
@@ -209,6 +209,7 @@
     "github.com/blang/semver",
     "github.com/cloudfoundry/libbuildpack",
     "github.com/cloudfoundry/libbuildpack/cutlass",
+    "github.com/cloudfoundry/libbuildpack/packager",
     "github.com/golang/mock/gomock",
     "github.com/google/subcommands",
     "github.com/onsi/ginkgo",
