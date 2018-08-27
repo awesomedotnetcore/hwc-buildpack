@@ -1,0 +1,19 @@
+default_versions: null
+dependencies:
+- name: mysql
+  sha256: 7076e8dc375dcb74de0765237fcd730c9cb09c24c4584328d7cf93798f45ee3e
+  uri: https://storage.googleapis.com/garden-windows-temp/mysql-data.tgz
+  version: 0.0.1
+dependency_deprecation_dates: null
+include_files:
+- README.md
+- VERSION
+- bin/detect
+- bin/compile
+- bin/supply.exe
+- bin/finalize.exe
+- bin/release
+- manifest.yml
+language: some_extension
+pre_package: scripts/build.sh
+stack: windows2016

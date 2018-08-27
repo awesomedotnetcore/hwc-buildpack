@@ -1,0 +1,31 @@
+---
+language: some_extension
+default_versions:
+dependency_deprecation_dates:
+dependencies:
+- name: mysql
+  uri: https://storage.googleapis.com/garden-windows-temp/mysql-data.tgz
+  version: 0.0.1
+  sha256: 7076e8dc375dcb74de0765237fcd730c9cb09c24c4584328d7cf93798f45ee3e
+  cf_stacks:
+  - windows2012R2
+  - windows2016
+  - cflinuxfs2
+- name: testexe
+  uri: https://storage.googleapis.com/garden-windows-temp/testexe.tgz
+  version: 0.0.1
+  sha256: 0a3b68c4eb43784d56219ef92ade4e20ee4198a499a4580a15635ee09970a050
+  cf_stacks:
+  - windows2012R2
+  - windows2016
+  - cflinuxfs2
+include_files:
+  - README.md
+  - VERSION
+  - bin/detect
+  - bin/compile
+  - bin/supply.exe
+  - bin/finalize.exe
+  - bin/release
+  - manifest.yml
+pre_package: scripts/build.sh
