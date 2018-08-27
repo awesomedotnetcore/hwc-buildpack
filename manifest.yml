@@ -11,7 +11,6 @@ dependencies:
   cf_stacks:
   - windows2012R2
   - windows2016
-pre_package: scripts/build.sh
 include_files:
 - CHANGELOG
 - LICENSE
@@ -25,3 +24,4 @@ include_files:
 - bin/detect.ps1
 - bin/release.bat
 - manifest.yml
+pre_package: scripts/build.sh
