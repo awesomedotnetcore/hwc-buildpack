@@ -2,6 +2,7 @@ package supply
 
 import (
 	"io"
+	"path/filepath"
 
 	"github.com/cloudfoundry/libbuildpack"
 )
@@ -12,6 +13,7 @@ type Stager interface {
 	DepDir() string
 	DepsIdx() string
 	DepsDir() string
+	AddBinDependencyLink(string, string) error
 }
 
 type Manifest interface {
@@ -43,7 +45,18 @@ type Supplier struct {
 func (s *Supplier) Run() error {
 	s.Log.BeginStep("Supplying hwc")
 
-	// TODO: Install any dependencies here...
+	dep := libbuildpack.Dependency{Name: "hwc", Version: "12.0.0"}
+	depDir := filepath.Join(s.Stager.DepDir(), "hwc")
+	if err := s.Installer.InstallDependency(dep, depDir); err != nil {
+		return err
+	}
+
+	//if err := s.Stager.AddBinDependencyLink(filepath.Join(dir, "hwc.exe"), "c:\\Users\\vcap\\hwc.exe"); err != nil {
+	//	return err
+	//}
+	//if err := s.Stager.AddBinDependencyLink(filepath.Join(dir, "hwc.exe"), "hwc.exe"); err != nil {
+	//	return err
+	//}
 
 	return nil
 }

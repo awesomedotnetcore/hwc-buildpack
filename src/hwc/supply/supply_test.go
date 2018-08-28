@@ -11,5 +11,9 @@ var _ = Describe("Supply", func() {
 	It("example test", func() {
 		Expect(false).To(Equal(false))
 	})
-	// TODO: Add tests here to check install dependency functions work
+
+	Describe("Run", func() {
+		// it downloads and installs the hwc.exe dependency
+		// it copies hwc.exe to .cloudfoundry/hwc.exe
+	})
 })

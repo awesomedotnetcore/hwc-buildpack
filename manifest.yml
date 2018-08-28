@@ -18,10 +18,11 @@ include_files:
 - README.md
 - VERSION
 - bin/compile
-- bin/compile.exe
 - bin/detect
 - bin/detect.bat
 - bin/detect.ps1
 - bin/release.bat
+- bin/supply.exe
+- bin/finalize.exe
 - manifest.yml
 pre_package: scripts/build.sh

@@ -1,6 +1,7 @@
 package finalize
 
 import (
+	"errors"
 	"io"
 
 	"github.com/cloudfoundry/libbuildpack"
@@ -17,11 +18,11 @@ type Stager interface {
 type Manifest interface {
 	//TODO: See more options at https://github.com/cloudfoundry/libbuildpack/blob/master/manifest.go
 	AllDependencyVersions(string) []string
+	DefaultVersion(string) (libbuildpack.Dependency, error)
 }
 
 type Installer interface {
 	//TODO: See more options at https://github.com/cloudfoundry/libbuildpack/blob/master/installer.go
-	DefaultVersion(string) (libbuildpack.Dependency, error)
 	InstallDependency(libbuildpack.Dependency, string) error
 	InstallOnlyVersion(string, string) error
 }
@@ -32,17 +33,31 @@ type Command interface {
 	Output(dir string, program string, args ...string) (string, error)
 }
 
+type Hwc interface {
+	CheckWebConfig(buildDir string) error
+	InstallAppHwc() error
+}
+
 type Finalizer struct {
+	BuildDir string
 	Manifest Manifest
 	Stager   Stager
 	Command  Command
+	Hwc      Hwc
 	Log      *libbuildpack.Logger
 }
+
+var (
+	errInvalidBuildDir  = errors.New("Invalid build directory provided")
+	errMissingWebConfig = errors.New("Missing Web.config")
+)
 
 func (f *Finalizer) Run() error {
 	f.Log.BeginStep("Configuring hwc")
 
-	// TODO: Prepare app for launch here here...
+	if err := f.Hwc.CheckWebConfig(f.BuildDir); err != nil {
+		return err
+	}
 
 	return nil
 }

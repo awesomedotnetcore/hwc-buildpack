@@ -27,7 +27,7 @@ var _ = Describe("CF HWC Buildpack", func() {
 		}
 	})
 
-	AfterEach(func() { app = DestroyApp(app) })
+	/* AfterEach(func() { app = DestroyApp(app) }) */
 
 	Describe("deploying an hwc app", func() {
 		Context("windows2012R2", func() {
@@ -58,7 +58,7 @@ var _ = Describe("CF HWC Buildpack", func() {
 				app.Stack = "windows2016"
 			})
 
-			It("deploys successfully with a rewrite rule", func() {
+			FIt("deploys successfully with a rewrite rule", func() {
 				PushAppAndConfirm(app)
 				if cutlass.Cached {
 					Expect(app.Stdout.String()).ToNot(ContainSubstring("Download ["))
@@ -70,7 +70,7 @@ var _ = Describe("CF HWC Buildpack", func() {
 				Expect(app.GetBody("/rewrite")).To(ContainSubstring("hello i am nora"))
 			})
 
-			FContext("with an extension buildpack", func() {
+			Context("with an extension buildpack", func() {
 				BeforeEach(func() {
 					if !ApiHasMultiBuildpack() {
 						Skip("API does not have multi buildpack support")
