@@ -36,11 +36,14 @@ func main() {
 		os.Exit(11)
 	}
 
+	harmonizer := finalize.NewHarmonizer(logger, stager.BuildDir(), stager.DepDir())
+
 	f := finalize.Finalizer{
-		Manifest: manifest,
-		Stager:   stager,
-		Command:  &libbuildpack.Command{},
-		Log:      logger,
+		Manifest:   manifest,
+		Stager:     stager,
+		Command:    &libbuildpack.Command{},
+		Log:        logger,
+		Harmonizer: harmonizer,
 	}
 
 	if err := f.Run(); err != nil {

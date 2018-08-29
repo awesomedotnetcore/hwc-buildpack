@@ -51,12 +51,5 @@ func (s *Supplier) Run() error {
 		return err
 	}
 
-	//if err := s.Stager.AddBinDependencyLink(filepath.Join(dir, "hwc.exe"), "c:\\Users\\vcap\\hwc.exe"); err != nil {
-	//	return err
-	//}
-	//if err := s.Stager.AddBinDependencyLink(filepath.Join(dir, "hwc.exe"), "hwc.exe"); err != nil {
-	//	return err
-	//}
-
 	return nil
 }

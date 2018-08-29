@@ -82,18 +82,6 @@ func (mr *MockStagerMockRecorder) DepsDir() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DepsDir", reflect.TypeOf((*MockStager)(nil).DepsDir))
 }
 
-// AddBinDependencyLink mocks base method
-func (m *MockStager) AddBinDependencyLink(arg0, arg1 string) error {
-	ret := m.ctrl.Call(m, "AddBinDependencyLink", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// AddBinDependencyLink indicates an expected call of AddBinDependencyLink
-func (mr *MockStagerMockRecorder) AddBinDependencyLink(arg0, arg1 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddBinDependencyLink", reflect.TypeOf((*MockStager)(nil).AddBinDependencyLink), arg0, arg1)
-}
-
 // MockManifest is a mock of Manifest interface
 type MockManifest struct {
 	ctrl     *gomock.Controller
@@ -129,19 +117,6 @@ func (mr *MockManifestMockRecorder) AllDependencyVersions(arg0 interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllDependencyVersions", reflect.TypeOf((*MockManifest)(nil).AllDependencyVersions), arg0)
 }
 
-// DefaultVersion mocks base method
-func (m *MockManifest) DefaultVersion(arg0 string) (libbuildpack.Dependency, error) {
-	ret := m.ctrl.Call(m, "DefaultVersion", arg0)
-	ret0, _ := ret[0].(libbuildpack.Dependency)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// DefaultVersion indicates an expected call of DefaultVersion
-func (mr *MockManifestMockRecorder) DefaultVersion(arg0 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DefaultVersion", reflect.TypeOf((*MockManifest)(nil).DefaultVersion), arg0)
-}
-
 // MockInstaller is a mock of Installer interface
 type MockInstaller struct {
 	ctrl     *gomock.Controller
@@ -163,6 +138,19 @@ func NewMockInstaller(ctrl *gomock.Controller) *MockInstaller {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockInstaller) EXPECT() *MockInstallerMockRecorder {
 	return m.recorder
+}
+
+// DefaultVersion mocks base method
+func (m *MockInstaller) DefaultVersion(arg0 string) (libbuildpack.Dependency, error) {
+	ret := m.ctrl.Call(m, "DefaultVersion", arg0)
+	ret0, _ := ret[0].(libbuildpack.Dependency)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DefaultVersion indicates an expected call of DefaultVersion
+func (mr *MockInstallerMockRecorder) DefaultVersion(arg0 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DefaultVersion", reflect.TypeOf((*MockInstaller)(nil).DefaultVersion), arg0)
 }
 
 // InstallDependency mocks base method
@@ -245,51 +233,4 @@ func (m *MockCommand) Output(dir, program string, args ...string) (string, error
 func (mr *MockCommandMockRecorder) Output(dir, program interface{}, args ...interface{}) *gomock.Call {
 	varargs := append([]interface{}{dir, program}, args...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Output", reflect.TypeOf((*MockCommand)(nil).Output), varargs...)
-}
-
-// MockHarmonizer is a mock of Harmonizer interface
-type MockHarmonizer struct {
-	ctrl     *gomock.Controller
-	recorder *MockHarmonizerMockRecorder
-}
-
-// MockHarmonizerMockRecorder is the mock recorder for MockHarmonizer
-type MockHarmonizerMockRecorder struct {
-	mock *MockHarmonizer
-}
-
-// NewMockHarmonizer creates a new mock instance
-func NewMockHarmonizer(ctrl *gomock.Controller) *MockHarmonizer {
-	mock := &MockHarmonizer{ctrl: ctrl}
-	mock.recorder = &MockHarmonizerMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockHarmonizer) EXPECT() *MockHarmonizerMockRecorder {
-	return m.recorder
-}
-
-// CheckWebConfig mocks base method
-func (m *MockHarmonizer) CheckWebConfig() error {
-	ret := m.ctrl.Call(m, "CheckWebConfig")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CheckWebConfig indicates an expected call of CheckWebConfig
-func (mr *MockHarmonizerMockRecorder) CheckWebConfig() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckWebConfig", reflect.TypeOf((*MockHarmonizer)(nil).CheckWebConfig))
-}
-
-// LinkLegacyHwc mocks base method
-func (m *MockHarmonizer) LinkLegacyHwc() error {
-	ret := m.ctrl.Call(m, "LinkLegacyHwc")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// LinkLegacyHwc indicates an expected call of LinkLegacyHwc
-func (mr *MockHarmonizerMockRecorder) LinkLegacyHwc() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LinkLegacyHwc", reflect.TypeOf((*MockHarmonizer)(nil).LinkLegacyHwc))
 }

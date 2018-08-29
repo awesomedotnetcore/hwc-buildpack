@@ -1,7 +1,6 @@
 package finalize
 
 import (
-	"errors"
 	"io"
 
 	"github.com/cloudfoundry/libbuildpack"
@@ -13,6 +12,7 @@ type Stager interface {
 	DepDir() string
 	DepsIdx() string
 	DepsDir() string
+	AddBinDependencyLink(string, string) error
 }
 
 type Manifest interface {
@@ -33,29 +33,30 @@ type Command interface {
 	Output(dir string, program string, args ...string) (string, error)
 }
 
-type Hwc interface {
-	CheckWebConfig(buildDir string) error
-	InstallAppHwc() error
+type Harmonizer interface {
+	CheckWebConfig() error
+	LinkLegacyHwc() error
 }
 
 type Finalizer struct {
-	BuildDir string
-	Manifest Manifest
-	Stager   Stager
-	Command  Command
-	Hwc      Hwc
-	Log      *libbuildpack.Logger
+	BuildDir   string
+	Manifest   Manifest
+	Stager     Stager
+	Command    Command
+	Harmonizer Harmonizer
+	Log        *libbuildpack.Logger
 }
-
-var (
-	errInvalidBuildDir  = errors.New("Invalid build directory provided")
-	errMissingWebConfig = errors.New("Missing Web.config")
-)
 
 func (f *Finalizer) Run() error {
 	f.Log.BeginStep("Configuring hwc")
 
-	if err := f.Hwc.CheckWebConfig(f.BuildDir); err != nil {
+	if err := f.Harmonizer.CheckWebConfig(); err != nil {
+		f.Log.Error("Unable to locate web.config: %s", err.Error())
+		return err
+	}
+
+	if err := f.Harmonizer.LinkLegacyHwc(); err != nil {
+		f.Log.Error("Unable to install HWC: %s", err.Error())
 		return err
 	}
 
